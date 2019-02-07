@@ -12,17 +12,55 @@ namespace Temperature
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        TextView vCels, vFah;
+        EditText tCels, tFah;
+        Button btConv, btClr;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
+            vCels = (TextView)FindViewById(Resource.Id.tvCelcius);
+            vFah = (TextView)FindViewById(Resource.Id.tvFah);
+            tCels = (EditText)FindViewById(Resource.Id.etCelcius);
+            tFah = (EditText)FindViewById(Resource.Id.etFah);
+            btConv = (Button)FindViewById(Resource.Id.btnConv);
+            btClr = (Button)FindViewById(Resource.Id.btnClr);
 
-            Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
+            btClr.Click += delegate
+            {
+                tCels.Text = "";
+                tFah.Text = "";
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;
+            };
+
+
+            btConv.Click += delegate
+            {
+                if(tCels.Text != "")
+                {
+                    //convert celcius to farenheit
+                    double cel, fah;
+                     cel = double.Parse(tCels.Text);
+                     fah = (cel * 9 / 5) + 32;
+                     tFah.Text = fah.ToString();
+
+                }
+
+                else if(tFah.Text!="")
+                {
+                    //Convert farenheit to celius
+                    double cel, fah;
+                    fah = double.Parse(tFah.Text);
+                    cel = (fah - 32) * 5 / 9;
+                    tCels.Text = cel.ToString();
+                }
+
+                else
+                    Toast.MakeText(this, "Please enter the temperature to convert", ToastLength.Long).Show();
+            };
+
+            
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
